@@ -50,3 +50,6 @@ docs/_build/
 
 # Test API request file
 test.http
+
+# Hiding env file in gitignore
+.env
