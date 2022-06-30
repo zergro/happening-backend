@@ -1,2 +1,2 @@
-web: gunicorn jobs.wsgi
+web: gunicorn backendApp.wsgi
 release: python manage.py migrate
