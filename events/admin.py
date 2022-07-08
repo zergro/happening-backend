@@ -1,7 +1,8 @@
 from django.contrib import admin
+from .models import Event
 
-from .models import *
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'status', 'startDate', 'endDate')
+    search_fields = ['title']
 
-admin.site.register(Category)
-admin.site.register(Organizer)
-admin.site.register(Event)
+admin.site.register(Event, EventAdmin)

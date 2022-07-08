@@ -7,5 +7,6 @@ from events import views
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', views.EventAPIView.as_view(), name='api')
+    path('api/all', views.EventAPIView.as_view(), name='api'),
+    path('api/future', views.FutureEventView.as_view(), name='api-future')
 ]

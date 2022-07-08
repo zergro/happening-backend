@@ -1,36 +1,47 @@
 from django.db import models
+from datetime import datetime, timedelta
 
+start = datetime.now().date()
+end = start + timedelta(7)
+class EventQuerySet(models.QuerySet):
+    def future(self):
+        return self.filter(startDate__gte=start, startDate__lte=end)
 
-class Category(models.Model):
-    category = models.CharField(max_length=200, blank=False)
+class EventManager(models.Manager):
+    def get_queryset(self):
+        return EventQuerySet(self.model, using=self._db)
 
-    def __str__(self):
-        return self.category
-
-
-class Organizer(models.Model):
-    name = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.name
-
+    def future(self):
+        return self.get_queryset().future()
 
 class Event(models.Model):
-
+    CATEGORY = (
+        ('Smiles', 'Smiles'),
+        ('Laughter', 'Laughter'),
+        ('Crazy', 'Crazy'),
+        ('Food', 'Food'),
+        ('Outside', 'Outside'),
+    )
     STATUS = (
         ('Publish', 'Publish'),
         ('Draft', 'Draft'),
     )
-    title = models.CharField(max_length=200, blank=False)
-    status = models.CharField(max_length=200, null=True, choices=STATUS)
-    startDate = models.DateField(blank=True)
-    endDate = models.DateField(blank=True)
-    link = models.CharField(max_length=200, blank=False)
-    # categories = models.ManyToManyField(Category)
-    # eventOrganizer = models.ForeignKey(Organizer, on_delete=models.SET_NULL, null=True)
 
-    class Meta:
-        unique_together = ('title', 'link')
+    RATING = (
+        ('Highly recommended', 'Highly recommended'),
+        ('Fun for the whole family', 'Fun for the whole family'),
+    )
+
+    title = models.CharField(max_length=200, blank=False, unique=True )
+    status = models.CharField(max_length=200, null=True, blank=True, choices=STATUS)
+    startDate = models.DateField(null=True, blank=True)
+    endDate = models.DateField(null=True, blank=True)
+    link = models.CharField(max_length=200, blank=False, unique=True)
+    category = models.CharField(max_length=200, null=True, blank=True, choices=CATEGORY)
+    rating = models.CharField(max_length=200, null=True, blank=True, choices=RATING)
+
+    objects = models.Manager()
+    date = EventManager()
 
     def __str__(self):
         return self.title
