@@ -2,10 +2,9 @@ from django.db import models
 from datetime import datetime, timedelta
 
 start = datetime.now().date()
-end = start + timedelta(7)
 class EventQuerySet(models.QuerySet):
     def future(self):
-        return self.filter(startDate__gte=start, startDate__lte=end)
+        return self.filter(startDate__gte=start)
 
 class EventManager(models.Manager):
     def get_queryset(self):

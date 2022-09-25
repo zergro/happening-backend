@@ -15,7 +15,7 @@ class FutureEventView(ListAPIView):
 class EventFilter(filters.FilterSet):
     title = filters.CharFilter(field_name="title", lookup_expr='contains')
     startDate = filters.DateFilter(field_name="startDate", lookup_expr='gte')
-    endDate = filters.DateFilter(field_name="startDate", lookup_expr='lte')
+    endDate = filters.DateFilter(field_name="endDate", lookup_expr='lte')
 
     class Meta:
         model = Event
@@ -26,7 +26,7 @@ class EventAPIView(generics.ListAPIView):
     """
     API endpoint that allows events to be viewed or edited.
     """
-    queryset = Event.objects.all().order_by('startDate')
+    queryset = Event.date.future().order_by('startDate')
     serializer_class = EventSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = EventFilter
