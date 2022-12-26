@@ -33,7 +33,7 @@ class Event(models.Model):
 
     title = models.CharField(max_length=200, blank=False, unique=True )
     status = models.CharField(max_length=200, null=True, blank=True, choices=STATUS)
-    startDate = models.DateField(auto_now_add=True)
+    startDate = models.DateField(auto_now_add=True, null=True)
     endDate = models.DateField(null=True, blank=True)
     link = models.CharField(max_length=200, blank=False, unique=True)
     category = models.CharField(max_length=200, null=True, blank=True, choices=CATEGORY)
