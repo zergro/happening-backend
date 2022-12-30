@@ -1,17 +1,4 @@
 from django.db import models
-from datetime import datetime, timedelta
-
-start = datetime.now().date()
-class EventQuerySet(models.QuerySet):
-    def future(self):
-        return self.filter(startDate__gte=start)
-
-class EventManager(models.Manager):
-    def get_queryset(self):
-        return EventQuerySet(self.model, using=self._db)
-
-    def future(self):
-        return self.get_queryset().future()
 
 class Event(models.Model):
     CATEGORY = (
@@ -40,7 +27,6 @@ class Event(models.Model):
     rating = models.CharField(max_length=200, null=True, blank=True, choices=RATING)
 
     objects = models.Manager()
-    date = EventManager()
-
+    
     def __str__(self):
         return self.title

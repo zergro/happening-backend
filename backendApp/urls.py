@@ -8,5 +8,4 @@ from events import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/all', views.EventAPIView.as_view(), name='api'),
-    path('api/future', views.FutureEventView.as_view(), name='api-future')
 ]

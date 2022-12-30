@@ -1,12 +1,10 @@
 from django.core.management.base import BaseCommand
 import requests
 from bs4 import BeautifulSoup
-
+import datetime 
 import numpy as np
-
 from time import sleep
 from random import randint
-
 import re
 
 from events.models import Event
@@ -64,13 +62,15 @@ class Command(BaseCommand):
                 date_month = re.findall(r"[A-Za-z]{3}", startDate)
                 start_day = str(date_day[0])
                 start_month = str(months[date_month[0]])
-                fullStartDate = "2022-" + start_month + "-" + start_day
+                currentDate = datetime.date.today()
+                fullStartDate = currentDate.year + "-" + start_month + "-" + start_day
                 fullEndDate = None
 
                 if len(date_day) >= 2:
                     end_day = str(date_day[1])
                     end_month = str(months[date_month[1]])
-                    fullEndDate = "2022-" + end_month + "-" + end_day
+                    currentDate = datetime.date.today()
+                    fullEndDate = currentDate.year + "-" + end_month + "-" + end_day
                 else:
                     pass
 

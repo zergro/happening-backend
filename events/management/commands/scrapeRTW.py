@@ -1,13 +1,11 @@
 from django.core.management.base import BaseCommand
 import requests
 from bs4 import BeautifulSoup
-
 import numpy as np
-
 from time import sleep
 from random import randint
-
 import re
+import datetime
 
 from events.models import Event
 
@@ -71,6 +69,11 @@ class Command(BaseCommand):
                     splitEnd1 = splitEnd[0]
                     splitStart2 = re.split(r"\s", splitStart1)
                     splitEnd2 = re.split(r"\s", splitEnd1)
+                    currentDate = datetime.date.today()
+                    print(str(currentDate))
+                    print("Current month is: " + str(months[splitStart2[0]]))
+                    print("Event month is: " + str(currentDate.month))
+
                     fullStartDate = "2022-" + \
                         str(months[splitStart2[0]]) + "-" + str(splitStart2[1])
                     fullEndDate = "2022-" + \
@@ -83,17 +86,17 @@ class Command(BaseCommand):
                 url = event.find('a')['href']
                 fullURL = 'http://www.rigathisweek.lv' + url
 
-                try:
-                    # save in db
-                    Event.objects.create(
-                        title=title,
-                        startDate=fullStartDate,
-                        endDate=fullEndDate,
-                        link=fullURL,
-                        status='Publish',
-                    )
-                    print('%s added' % (title,))
-                except:
-                    print('Something wrong happened or %s already exists' % (title,))
+                # try:
+                #     # save in db
+                #     Event.objects.create(
+                #         title=title,
+                #         startDate=fullStartDate,
+                #         endDate=fullEndDate,
+                #         link=fullURL,
+                #         status='Publish',
+                #     )
+                #     print('%s added' % (title,))
+                # except:
+                #     print('Something wrong happened or %s already exists' % (title,))
 
         self.stdout.write('job complete')
