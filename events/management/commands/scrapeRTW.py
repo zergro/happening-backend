@@ -54,8 +54,6 @@ class Command(BaseCommand):
             # looping through every on the current page
             for event in allEvents:
                 title = event.find('h3').text
-                fullStartDate = None
-                fullEndDate = None
                 date = event.find('span', class_="calendar").text
                 dateTime = event.find('span', class_="calendar")['content']
                 checkDate = re.search("-", date)
@@ -70,14 +68,18 @@ class Command(BaseCommand):
                     splitStart2 = re.split(r"\s", splitStart1)
                     splitEnd2 = re.split(r"\s", splitEnd1)
                     currentDate = datetime.date.today()
-                    print(str(currentDate))
-                    print("Current month is: " + str(months[splitStart2[0]]))
-                    print("Event month is: " + str(currentDate.month))
+                    start_day = splitStart2[1]
+                    end_day = splitEnd2[1]
+                    end_month = months[splitEnd2[0]]
+                    start_month = months[splitStart2[0]]
 
-                    fullStartDate = "2022-" + \
-                        str(months[splitStart2[0]]) + "-" + str(splitStart2[1])
-                    fullEndDate = "2022-" + \
-                        str(months[splitEnd2[0]]) + "-" + str(splitEnd2[1])
+                    if int(end_month) < int(start_month):
+                        fullStartDate = str(currentDate.year) + "-" + str(start_month) + "-" + str(start_day)
+                        fullEndDate = str(currentDate.year + 1) + "-" + str(end_month) + "-" + str(end_day)
+                    else:
+                        fullStartDate = str(currentDate.year) + "-" + str(start_month) + "-" + str(start_day)
+                        fullEndDate = str(currentDate.year) + "-" + str(end_month) + "-" + str(end_day)
+
                 elif dateTime[-1] == 'T':
                     fullStartDate = dateTime[:-1]
                 elif dateTime[-6] == 'T':
@@ -86,17 +88,20 @@ class Command(BaseCommand):
                 url = event.find('a')['href']
                 fullURL = 'http://www.rigathisweek.lv' + url
 
-                # try:
-                #     # save in db
-                #     Event.objects.create(
-                #         title=title,
-                #         startDate=fullStartDate,
-                #         endDate=fullEndDate,
-                #         link=fullURL,
-                #         status='Publish',
-                #     )
-                #     print('%s added' % (title,))
-                # except:
-                #     print('Something wrong happened or %s already exists' % (title,))
+                # print(title + ' ' + fullStartDate + ' ' + fullEndDate)
+
+
+                try:
+                    # save in db
+                    Event.objects.create(
+                        title=title,
+                        startDate=fullStartDate,
+                        endDate=fullEndDate,
+                        link=fullURL,
+                        status='Publish',
+                    )
+                    print('%s added' % (title,))
+                except:
+                    print('Something wrong happened or %s already exists' % (title,))
 
         self.stdout.write('job complete')

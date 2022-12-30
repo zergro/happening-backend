@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 import requests
 from bs4 import BeautifulSoup
-import datetime 
+import datetime
+from datetime import date
 import numpy as np
 from time import sleep
 from random import randint
@@ -63,16 +64,27 @@ class Command(BaseCommand):
                 start_day = str(date_day[0])
                 start_month = str(months[date_month[0]])
                 currentDate = datetime.date.today()
-                fullStartDate = currentDate.year + "-" + start_month + "-" + start_day
-                fullEndDate = None
+                fullStartDate = str(currentDate.year) + "-" + start_month + "-" + start_day
 
                 if len(date_day) >= 2:
                     end_day = str(date_day[1])
                     end_month = str(months[date_month[1]])
-                    currentDate = datetime.date.today()
-                    fullEndDate = currentDate.year + "-" + end_month + "-" + end_day
+                    fullEndDate = str(currentDate.year) + "-" + str(end_month) + "-" + str(end_day)
+
+                    if int(end_month) < int(start_month):
+                        fullEndDate = str(date.today().year + 1) + "-" + str(end_month) + "-" + str(end_day)
+                    else:
+                        pass
+
                 else:
-                    pass
+                    if int(start_month) < int(date.today().month - 1):
+                        fullStartDate = str(date.today().year + 1) + "-" + str(start_month) + "-" + str(start_day)
+                        fullEndDate = str(date.today().year + 1) + "-" + str(end_month) + "-" + str(end_day)
+
+                    else:
+                        fullEndDate = fullStartDate
+                
+                # print(title + ' ' + fullStartDate + ' ' + fullEndDate)
 
                 try:
                     # save in db
